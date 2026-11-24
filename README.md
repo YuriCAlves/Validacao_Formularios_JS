@@ -1,4 +1,4 @@
-# Validação de formulários (Parte 1)
+# Validação de formulários
 
 Atividade não presencial de Front-End (IFCE): página de cadastro com validação feita em JavaScript externo.
 
