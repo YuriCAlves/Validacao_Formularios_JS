@@ -23,6 +23,8 @@ function validarNome() {
 
   if (nome === "") {
     mensagem = "Informe seu nome.";
+  } else if (/\d/.test(nome)) {
+    mensagem = "O nome não pode conter números.";
   } else if (!/^[\p{L}\s'’-]+$/u.test(nome)) {
     mensagem = "O nome deve conter apenas letras (acentos, espaços, hífen e apóstrofo são permitidos).";
   } else if (nome.length < 3) {
@@ -152,5 +154,15 @@ validacoes.forEach(function (item) {
 campoSenha.addEventListener("input", function () {
   if (campoConfirmacao.value !== "") {
     validarConfirmacao();
+  }
+});
+
+campoNome.addEventListener("input", function () {
+  const valor = campoNome.value;
+  if (/\d/.test(valor)) {
+    const posicao = campoNome.selectionStart - (valor.slice(0, campoNome.selectionStart).match(/\d/g) || []).length;
+    campoNome.value = valor.replace(/\d/g, "");
+    campoNome.setSelectionRange(posicao, posicao);
+    mostrarMensagem(campoNome, "O nome não pode conter números.");
   }
 });
