@@ -1,4 +1,3 @@
-// Referências aos elementos do formulário
 const form = document.getElementById("form-cadastro");
 const campoNome = document.getElementById("nome");
 const campoEmail = document.getElementById("email");
@@ -11,7 +10,6 @@ const resumo = document.getElementById("resumo");
 const resumoTitulo = document.getElementById("resumo-titulo");
 const resumoLista = document.getElementById("resumo-lista");
 
-// Mostra (ou limpa) a mensagem junto ao campo e marca o estado de acessibilidade
 function mostrarMensagem(campo, mensagem) {
   const spanErro = document.getElementById("erro-" + campo.id);
   spanErro.textContent = mensagem;
@@ -19,20 +17,20 @@ function mostrarMensagem(campo, mensagem) {
   return mensagem === "";
 }
 
-// 1. Nome: obrigatório, pelo menos 3 caracteres após trim()
 function validarNome() {
   const nome = campoNome.value.trim();
   let mensagem = "";
 
   if (nome === "") {
     mensagem = "Informe seu nome.";
+  } else if (!/^[\p{L}\s'’-]+$/u.test(nome)) {
+    mensagem = "O nome deve conter apenas letras (acentos, espaços, hífen e apóstrofo são permitidos).";
   } else if (nome.length < 3) {
     mensagem = "O nome deve ter pelo menos 3 caracteres.";
   }
   return mostrarMensagem(campoNome, mensagem);
 }
 
-// 2. E-mail: usa a validação nativa (type="email" + required) via validity
 function validarEmail() {
   const validade = campoEmail.validity;
   let mensagem = "";
@@ -45,7 +43,6 @@ function validarEmail() {
   return mostrarMensagem(campoEmail, mensagem);
 }
 
-// 3. Usuário: 4 a 16 caracteres, apenas A-Z, a-z, 0-9 e _ (atributo pattern)
 function validarUsuario() {
   const validade = campoUsuario.validity;
   let mensagem = "";
@@ -58,9 +55,8 @@ function validarUsuario() {
   return mostrarMensagem(campoUsuario, mensagem);
 }
 
-// 4a. Senha: 12 a 64 caracteres, espaços permitidos, sem trim()
 function validarSenha() {
-  const senha = campoSenha.value; // sem trim() de propósito
+  const senha = campoSenha.value;
   let mensagem = "";
 
   if (senha === "") {
@@ -73,7 +69,6 @@ function validarSenha() {
   return mostrarMensagem(campoSenha, mensagem);
 }
 
-// 4b. Confirmação: deve ser idêntica à senha
 function validarConfirmacao() {
   const confirmacao = campoConfirmacao.value;
   let mensagem = "";
@@ -86,13 +81,11 @@ function validarConfirmacao() {
   return mostrarMensagem(campoConfirmacao, mensagem);
 }
 
-// 5. Aceite: checkbox obrigatório
 function validarAceite() {
   const mensagem = campoAceite.checked ? "" : "Você precisa aceitar as regras do exercício.";
   return mostrarMensagem(campoAceite, mensagem);
 }
 
-// Lista de validações, na ordem dos campos
 const validacoes = [
   { campo: campoNome, rotulo: "Nome", validar: validarNome },
   { campo: campoEmail, rotulo: "E-mail", validar: validarEmail },
@@ -102,7 +95,6 @@ const validacoes = [
   { campo: campoAceite, rotulo: "Aceite", validar: validarAceite },
 ];
 
-// Resumo exibido na página (nunca inclui a senha)
 function mostrarResumo(erros) {
   resumoLista.innerHTML = "";
   resumo.hidden = false;
@@ -126,13 +118,12 @@ function mostrarResumo(erros) {
     ];
     dados.forEach(function (texto) {
       const li = document.createElement("li");
-      li.textContent = texto; // textContent evita injeção de HTML
+      li.textContent = texto;
       resumoLista.appendChild(li);
     });
   }
 }
 
-// Envio: valida tudo, mostra o resumo e foca o primeiro campo inválido
 form.addEventListener("submit", function (evento) {
   evento.preventDefault();
 
@@ -147,7 +138,6 @@ form.addEventListener("submit", function (evento) {
   }
 });
 
-// Validação ao sair do campo (blur) e correção ao digitar, se já estiver com erro
 validacoes.forEach(function (item) {
   const evento = item.campo.type === "checkbox" ? "change" : "blur";
   item.campo.addEventListener(evento, item.validar);
@@ -159,7 +149,6 @@ validacoes.forEach(function (item) {
   });
 });
 
-// Se a senha mudar, revalida a confirmação já preenchida
 campoSenha.addEventListener("input", function () {
   if (campoConfirmacao.value !== "") {
     validarConfirmacao();
